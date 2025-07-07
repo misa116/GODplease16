@@ -1,7 +1,7 @@
  import express from "express";
 import dotenv from "dotenv";
 import { db } from "./db/db.js";
-
+import { fileURLToPath } from "url";
 
 
 dotenv.config();
@@ -23,6 +23,7 @@ import uomRoutes from "./routes/uomRoutes.js";
 import path from "path";
 
 import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
+import { fileURLToPath } from "url";
 
 
 
@@ -53,6 +54,10 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const __dirname = path.resolve();
 if(process.env.NODE_ENV === 'production') {
