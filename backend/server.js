@@ -23,7 +23,6 @@ import uomRoutes from "./routes/uomRoutes.js";
 import path from "path";
 
 import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
-import { fileURLToPath } from "url";
 
 
 
