@@ -5,7 +5,9 @@ import { db } from "./db/db.js";
 
 
 dotenv.config();
- const app = express();
+import cors from 'cors';
+
+const app = express();
 const port = process.env.PORT || 5000;
 
 
@@ -41,6 +43,10 @@ app.use(cookieParser());
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
+
+
+app.use(cors());
+
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
