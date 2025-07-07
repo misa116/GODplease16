@@ -5,6 +5,9 @@ import { FaTimes } from "react-icons/fa";
 import Loader from "../../components/Loader";
 import { useGetOrdersQuery } from "../../redux/orderSlice";
 
+
+
+
 const LocalPurchaseOrders = () => {
   const navigate = useNavigate();
 
@@ -113,4 +116,4 @@ const LocalPurchaseOrders = () => {
   );
 };
 
-export default PurchaseOrders;
+export default LocalPurchaseOrders;
