@@ -88,12 +88,12 @@ app.get("*", (req, res) => {
 });
 } else {
   app.get("/", (req, res) => {
-    res.json(`app running ..`);
+    res.json("app running ..");
 });
 
 }
 
-//app.use("/*", routeNotFound);
+//app.use("*", routeNotFound);
 app.use(errorHandler);
 
 
