@@ -51,9 +51,7 @@ const port = process.env.PORT || 5000;
 
 //console.log(process.env.MONGO_URI);
 db();
-app.get('/', (req, res) => {
-    res.send(`<h1>hohohho<h1/>`);
-});
+
 
 
 app.use(express.json());
