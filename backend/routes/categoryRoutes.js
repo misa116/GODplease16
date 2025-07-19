@@ -5,6 +5,9 @@ import {
 } from "../controllers/categoryController.js";
 import { isAdmin, protect } from "../middlewares/authMiddleware.js";
 
+console.log("🟢 categoryRoutes loaded");
+
+
 const router = express.Router();
 
 router.route("/create").post(protect, isAdmin, createCategory);

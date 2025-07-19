@@ -8,6 +8,10 @@ import {
   updateProduct,
 } from "../controllers/productController.js";
 import { isAdmin, protect } from "../middlewares/authMiddleware.js";
+
+console.log("🟢 productRoutes loaded");
+
+
 const router = express.Router();
 
 router.post("/create", protect, isAdmin, createProduct);

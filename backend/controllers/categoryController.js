@@ -1,5 +1,5 @@
  import Category from "../models/categoryModal.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asynchandler.js";
 
 export const createCategory = asyncHandler(async (req, res) => {
   try {

@@ -9,6 +9,10 @@ import {
   updateUOM,
 } from "../controllers/uomController.js";
 
+
+console.log("🟢 uomRoutes loaded");
+
+
 const router = express.Router();
 
 router.post("/", protect, createUOM);

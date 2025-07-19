@@ -1,28 +1,50 @@
- import express from "express";
+import express from "express";
 import dotenv from "dotenv";
 import { db } from "./db/db.js";
 import { fileURLToPath } from "url";
-
-
-dotenv.config();
-import cors from 'cors';
-
-const app = express();
-const port = process.env.PORT || 5000;
-
-
+import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import uomRoutes from "./routes/uomRoutes.js";
-import path from "path";
-
 import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
+
+dotenv.config();
+
+const originalRouter = express.Router;
+express.Router = function (...args) {
+  const router = originalRouter.apply(this, args);
+
+  // Patch `.route()`
+  const origRoute = router.route;
+  router.route = function (path, ...rest) {
+    console.log("→ registering route (route()):", path);
+    return origRoute.call(this, path, ...rest);
+  };
+
+  // Patch HTTP methods directly
+  ["get", "post", "put", "delete", "patch", "all"].forEach((method) => {
+    const orig = router[method];
+    router[method] = function (path, ...rest) {
+      console.log(`→ registering route (${method.toUpperCase()}):`, path);
+      return orig.call(this, path, ...rest);
+    };
+  });
+
+  return router;
+};
+
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Remaining code...
 
 
 
@@ -59,15 +81,15 @@ const __dirname = path.dirname(__filename);
 
 
 
-if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname , '/frontend/build')));
+if (process.env.NODE_ENV !== "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
 
    //handleother ruotes
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname , "frontend", "build", "index.html"))
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
 });
 } else {
-  app.get('/', (req, res) => {
+  app.get("/", (req, res) => {
     res.json(`app running ..`);
 });
 

@@ -1,11 +1,10 @@
- import express from "express";
+import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
 import {
   allOrders,
   myOrders,
   newOrder,
   orderDetails,
-  removeOrder,
   updateOderItemPrice,
   updateOrder,
   updateOrderProcurement,
@@ -15,19 +14,23 @@ import {
 
 const router = express.Router();
 
-router.route("/create").post(protect, newOrder);
-router.get("/", protect, allOrders);
+// Create order
+router.post("/create", protect, newOrder);
 
+// More specific routes FIRST
 router.route("/mine").get(protect, myOrders);
-
-router
-.route("/:id")
-.get(protect, orderDetails)
-.delete(protect, removeOrder)
-.delete(protect, deleteOrder);
+router.route("/deliver/procur/:id").put(protect, updateOrderProcurement);
 router.route("/:id/receive").put(protect, updateOrderReceived);
 router.route("/:id/updatestock").put(protect, updateOrder);
-router.route("/deliver/procur/:id").put(protect, updateOrderProcurement);
+
+                                                
 router.put("/updateItemPrice/:itemId", protect, updateOderItemPrice);
+
+// General routes LAST
+router.get("/", protect, allOrders);
+router
+  .route("/:id")
+  .get(protect, orderDetails)
+  .delete(protect, deleteOrder);
 
 export default router;
