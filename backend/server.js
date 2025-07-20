@@ -20,28 +20,28 @@ dotenv.config();
 console.log("🌍 NODE_ENV =", process.env.NODE_ENV);
 
 
-const originalRouter = express.Router;
-express.Router = function (...args) {
-  const router = originalRouter.apply(this, args);
+//const originalRouter = express.Router;
+//express.Router = function (...args) {
+  //const router = originalRouter.apply(this, args);
 
   // Patch `.route()`
-  const origRoute = router.route;
-  router.route = function (path, ...rest) {
-    console.log("→ registering route (route()):", path);
-    return origRoute.call(this, path, ...rest);
-  };
+  //const origRoute = router.route;
+  //router.route = function (path, ...rest) {
+    //console.log("→ registering route (route()):", path);
+    //return origRoute.call(this, path, ...rest);
+  //};
 
   // Patch HTTP methods directly
-  ["get", "post", "put", "delete", "patch", "all"].forEach((method) => {
-    const orig = router[method];
-    router[method] = function (path, ...rest) {
-      console.log(`→ registering route (${method.toUpperCase()}):`, path);
-      return orig.call(this, path, ...rest);
-    };
-  });
+  //["get", "post", "put", "delete", "patch", "all"].forEach((method) => {
+   // const orig = router[method];
+    //router[method] = function (path, ...rest) {
+     // console.log(`→ registering route (${method.toUpperCase()}):`, path);
+      //return orig.call(this, path, ...rest);
+    //};
+  //});
 
-  return router;
-};
+  //return router;
+//};
 
 
 const app = express();
