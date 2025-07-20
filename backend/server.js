@@ -17,6 +17,9 @@ import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
 
 dotenv.config();
 
+console.log("🌍 NODE_ENV =", process.env.NODE_ENV);
+
+
 const originalRouter = express.Router;
 express.Router = function (...args) {
   const router = originalRouter.apply(this, args);
@@ -60,7 +63,7 @@ app.use(helmet());
 app.use(cookieParser());
 
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(morgan("dev"));
 }
 
@@ -82,16 +85,15 @@ const __dirname = path.dirname(__filename);
 if (process.env.NODE_ENV !== "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-   //handleother ruotes
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
-});
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
+  });
 } else {
   app.get("/", (req, res) => {
-    res.json("app running ..");
-});
-
+    res.send("API is running..");
+  });
 }
+
 
 //app.use("*", routeNotFound);
 app.use(errorHandler);
