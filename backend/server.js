@@ -13,93 +13,56 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import uomRoutes from "./routes/uomRoutes.js";
-import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
+import { errorHandler } from "./utils/errorHandler.js";
 
+// ✅ Load environment variables
 dotenv.config();
 
-console.log("🌍 NODE_ENV =", process.env.NODE_ENV);
-
-
-//const originalRouter = express.Router;
-//express.Router = function (...args) {
-  //const router = originalRouter.apply(this, args);
-
-  // Patch `.route()`
-  //const origRoute = router.route;
-  //router.route = function (path, ...rest) {
-    //console.log("→ registering route (route()):", path);
-    //return origRoute.call(this, path, ...rest);
-  //};
-
-  // Patch HTTP methods directly
-  //["get", "post", "put", "delete", "patch", "all"].forEach((method) => {
-   // const orig = router[method];
-    //router[method] = function (path, ...rest) {
-     // console.log(`→ registering route (${method.toUpperCase()}):`, path);
-      //return orig.call(this, path, ...rest);
-    //};
-  //});
-
-  //return router;
-//};
-
+console.log("✅ NODE_ENV =", process.env.NODE_ENV);
+console.log("✅ MONGO_URI =", process.env.MONGO_URI);
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Remaining code...
-
-
-
-
-//console.log(process.env.MONGO_URI);
+// ✅ Connect to the database
 db();
 
-
-
+// ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cookieParser());
+app.use(cors());
 
-
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-
-app.use(cors());
-
-
+// ✅ API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
 
+// ✅ Serve frontend in production
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
-  });
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"))
+  );
 } else {
   app.get("/", (req, res) => {
     res.send("API is running..");
   });
 }
 
-
-//app.use("*", routeNotFound);
+// ✅ Error Handling
 app.use(errorHandler);
 
-
-
-//console.log(5 + 8);
-
-app.listen(port, console.log(`app is running port ${port}`));
+// ✅ Start the server
+app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
