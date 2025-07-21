@@ -17,7 +17,6 @@ import { errorHandler } from "./utils/errorHandler.js";
 
 // ✅ Load environment variables
 dotenv.config();
-
 console.log("✅ NODE_ENV =", process.env.NODE_ENV);
 console.log("✅ MONGO_URI =", process.env.MONGO_URI);
 
@@ -32,8 +31,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cookieParser());
-app.use(cors());
 
+// ✅ Fixed CORS for cookie-based auth (important!)
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://inventory-app-fully-1t9i.onrender.com"],
+    credentials: true,
+  })
+);
+
+// ✅ Dev logging
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -45,7 +52,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
 
-// ✅ Serve frontend in production
+// ✅ Serve frontend (React build) in production
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -61,8 +68,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// ✅ Error Handling
+// ✅ Error handling
 app.use(errorHandler);
 
-// ✅ Start the server
+// ✅ Start server
 app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
