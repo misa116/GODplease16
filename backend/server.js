@@ -17,14 +17,33 @@ import { errorHandler } from "./utils/errorHandler.js";
 
 // ✅ Load environment variables
 dotenv.config();
+
 console.log("✅ NODE_ENV =", process.env.NODE_ENV);
 console.log("✅ MONGO_URI =", process.env.MONGO_URI);
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ Connect to the database
+// ✅ Connect to DB
 db();
+
+// ✅ CORS Configuration
+const allowedOrigins = [
+  "http://localhost:3000", // local frontend
+  "https://ubiquitous-bublanina-92e994.netlify.app", // deployed frontend
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 
 // ✅ Middleware
 app.use(express.json());
@@ -32,15 +51,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cookieParser());
 
-// ✅ Fixed CORS for cookie-based auth (important!)
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://inventory-app-fully-1t9i.onrender.com"],
-    credentials: true,
-  })
-);
-
-// ✅ Dev logging
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
@@ -52,7 +62,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
 
-// ✅ Serve frontend (React build) in production
+// ✅ Serve frontend in production
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -64,12 +74,14 @@ if (process.env.NODE_ENV === "production") {
   );
 } else {
   app.get("/", (req, res) => {
-    res.send("API is running..");
+    res.send("API is running...");
   });
 }
 
-// ✅ Error handling
+// ✅ Error Handling
 app.use(errorHandler);
 
 // ✅ Start server
-app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+app.listen(port, () =>
+  console.log(`🚀 Server running in ${process.env.NODE_ENV} on port ${port}`)
+);
