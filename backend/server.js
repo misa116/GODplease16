@@ -66,7 +66,7 @@ app.use("/api/uom", uomRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === "production") {
   );
 } else {
   app.get("/", (req, res) => {
-    res.send("API is running...");
+    res.json("API is running...");
   });
 }
 
@@ -82,6 +82,6 @@ if (process.env.NODE_ENV === "production") {
 app.use(errorHandler);
 
 // ✅ Start server
-app.listen(port, () =>
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} on port ${port}`)
+app.listen(5000,
+  console.log(`app running 0n 5000`)
 );

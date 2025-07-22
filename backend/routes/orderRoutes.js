@@ -27,7 +27,7 @@ router.route("/:id/receive").put(protect, updateOrderReceived);
 router.route("/:id/updatestock").put(protect, updateOrder);
 
                                                 
-router.put("/updateItemPrice/:itemId", protect, updateOderItemPrice);
+router.route("/updateItemPrice/:itemId", protect, updateOderItemPrice);
 
 // General routes LAST
 router.get("/", protect, allOrders);
