@@ -20,14 +20,11 @@ router.post("/create", protect, newOrder);
 // More specific routes FIRST
 router.route("/mine").get(protect, myOrders);
 router.route("/deliver-dept/:id").put(protect, updateOrderProcurement);
-
-
-
 router.route("/:id/receive").put(protect, updateOrderReceived);
 router.route("/:id/updatestock").put(protect, updateOrder);
 
-                                                
-router.route("/updateItemPrice/:itemId", protect, updateOderItemPrice);
+// ✅ Fixed this line:
+router.put("/updateItemPrice/:itemId", protect, updateOderItemPrice);
 
 // General routes LAST
 router.get("/", protect, allOrders);
