@@ -1,5 +1,5 @@
  import UOM from "../models/uomModal.js";
-import { asyncHandler } from "../utils/asynchandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createUOM = asyncHandler(async (req, res) => {
   try {

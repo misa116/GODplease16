@@ -1,5 +1,5 @@
 import Product from "../models/productModal.js";
-import { asyncHandler } from "../utils/asynchandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 

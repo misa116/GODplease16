@@ -12,6 +12,9 @@ import {
   deleteOrder,
 } from "../controllers/orderController.js";
 
+ console.log("🟢 orderRoutes loaded");
+
+
 const router = express.Router();
 
 // Create order

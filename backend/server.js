@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV === "development") {
 // ✅ CORS setup
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://ubiquitous-bublanina-92e994.netlify.app", // your Netlify domain
+ "https://ubiquitous-bublanina-92e994.netlify.app", // your Netlify domain
 ];
 
 app.use(
@@ -74,7 +74,7 @@ app.use("/api/uom", uomRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
@@ -95,3 +95,67 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
   console.log(`✅ Server running on port ${PORT} in ${process.env.NODE_ENV} mode`)
 );
+/*/
+
+
+import express from "express";
+import dotenv from "dotenv";
+import { db } from "./db/db.js";
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+import morgan from "morgan";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import uomRoutes from "./routes/uomRoutes.js";
+
+import { errorHandler, notFound } from "./utils/errorHandler.js";
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, private"
+  );
+  next();
+});
+
+// console.log(process.env.MONGO_URI);
+db();
+
+app.get("/", (req, res) => {
+  res.send(`<h1>WELCOME TO NODE JS </h1>`);
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(cookieParser());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("dev"));
+}
+
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/uom", uomRoutes);
+
+//app.use("/*", routeNotFound);
+app.use(errorHandler);
+
+// console.log(5 + 6, "", 6 * 6);
+
+app.listen(port, console.log(`app is running port  ${port}`));
+
+
+
+
+
