@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import { db } from "./db/db.js";
 import cors from "cors";
 import { fileURLToPath } from "url";
-import path from "path";
 
 dotenv.config();
 
@@ -20,7 +19,7 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import uomRoutes from "./routes/uomRoutes.js";
-
+import path from 'path';
 import { errorHandler } from "./utils/errorHandler.js";
 
 app.use((req, res, next) => {
@@ -34,9 +33,7 @@ app.use((req, res, next) => {
 // console.log(process.env.MONGO_URI);
 db();
 
-app.get("/", (req, res) => {
-  res.send(`<h1>WELCOME TO NODE JS </h1>`);
-});
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,19 +53,25 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
     res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"))
   );
 } else {
-  app.get("/", (req, res) => {
-    res.send("API is running...");
-  });
+ app.get("/", (req, res) => {
+  res.json(`WELCOME MISA  `);
+});
 }
+
+
+
+
+
+
 
 
 

@@ -9,14 +9,14 @@ import { useGetOrdersQuery } from "../../redux/orderSlice";
 
 
 const LocalPurchaseOrders = () => {
-  const navigate = useNavigate();
 
   // Access user info from redux store
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   // Redirect users who are not from the Procurement department
   useEffect(() => {
-    if (userInfo && userInfo.dept !== "Procurement") {
+    if (userInfo && userInfo?.dept !== "Procurement") {
       navigate("/");
     }
   }, [userInfo, navigate]);
