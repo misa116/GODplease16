@@ -1,23 +1,29 @@
-// backend/middlewares/errorMiddleware.js
 
-export const notFound = (req, res, next) => {
-  const error = new Error(`Not Found - ${req.originalUrl}`);
-  res.status(404);
-  next(error);
-};
 
-export const errorHandler = (err, req, res, next) => {
+
+export const errorHandler = async (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+
   let message = err.message;
 
-  // ✅ Catch bad ObjectId errors
-  if (err.name === "CastError" && err.kind === "ObjectId") {
+  // check for specific errors
+  if (err.name === "castError" && err.kind === "ObjectId") {
     statusCode = 404;
-    message = "Resource not found";
+    message = "Not Found resource";
   }
 
+  // additional error handling Logic can be added here
+
+  // send the error response
   res.status(statusCode).json({
-    message,
+    message: message,
     stack: process.env.NODE_ENV === "production" ? null : err.stack,
   });
+};
+
+export const routeNotFound = (req, res, next) => {
+  const error = new Error(`Not Found ${req.originalUrl} route`);
+
+  res.status(404);
+  next(error);
 };

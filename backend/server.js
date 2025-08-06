@@ -20,7 +20,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import uomRoutes from "./routes/uomRoutes.js";
 import path from 'path';
-import { errorHandler } from "./utils/errorHandler.js";
+import { errorHandler, routeNotFound } from "./utils/errorHandler.js";
 
 app.use((req, res, next) => {
   res.setHeader(
@@ -55,7 +55,7 @@ app.use("/api/uom", uomRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production') {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
@@ -75,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 
-//app.use("/*", routeNotFound);
+//app.use("/*splat", routeNotFound);
 app.use(errorHandler);
 
 // console.log(5 + 6, "", 6 * 6);
