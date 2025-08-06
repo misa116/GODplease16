@@ -21,7 +21,7 @@ export const errorHandler = async (err, req, res, next) => {
   });
 };
 
-export const routeNotFound = (req, res, next) => {
+export const notFound = (req, res, next) => {
   const error = new Error(`Not Found ${req.originalUrl} route`);
 
   res.status(404);

@@ -1,15 +1,11 @@
-
-
 import express from "express";
 import dotenv from "dotenv";
 import { db } from "./db/db.js";
-import cors from "cors";
-import { fileURLToPath } from "url";
 
 dotenv.config();
+import cors from "cors";
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 import morgan from "morgan";
 import helmet from "helmet";
@@ -20,7 +16,10 @@ import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import uomRoutes from "./routes/uomRoutes.js";
 import path from 'path';
-import { errorHandler } from "./utils/errorHandler.js";
+import { errorHandler,notFound } from "./utils/errorHandler.js";
+import { fileURLToPath } from "url";
+
+
 
 app.use((req, res, next) => {
   res.setHeader(
@@ -29,6 +28,10 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+
+const port = process.env.PORT || 5000;
+
 
 // console.log(process.env.MONGO_URI);
 db();
@@ -52,10 +55,11 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/uom", uomRoutes);
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.resolve();
 
-if (process.env.NODE_ENV === 'production') {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve(__filename);
+
+if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
@@ -63,7 +67,7 @@ if (process.env.NODE_ENV === 'production') {
   );
 } else {
  app.get("/", (req, res) => {
-  res.json(`WELCOME MISA  `);
+  res.json("WELCOME MISA  ");
 });
 }
 
@@ -75,7 +79,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 
-//app.use("/*splat", routeNotFound);
+app.use("/*", notFound);
 app.use(errorHandler);
 
 // console.log(5 + 6, "", 6 * 6);
