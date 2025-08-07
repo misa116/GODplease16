@@ -59,7 +59,7 @@ app.use("/api/uom", uomRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve(__filename);
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) =>
@@ -79,7 +79,7 @@ if (process.env.NODE_ENV === "production") {
 
 
 
-app.use("/*", notFound);
+//app.use("/", notFound);
 app.use(errorHandler);
 
 // console.log(5 + 6, "", 6 * 6);
